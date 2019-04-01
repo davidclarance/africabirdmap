@@ -5,7 +5,32 @@
 The Kenya Bird Map project aims to map the current distribution of all of Kenya’s bird species and describe their status with the help of valued input from Citizen Scientists – volunteer members of the public who are keen to contribute through going birding and submitting their observations to the project. By pooling the efforts of many Citizen Scientist birders, Kenya Bird Map will tell the story of changing bird distributions and abundance - and in so doing provide a powerful tool for conservation.
 
 
-This package is an attempt to make life easier for the researchers and citizen scientists interacting with the Africa Bird Map's data. Some examples on how to use the package are given below.
+
+This package is an attempt to make life easier for the researchers and citizen scientists interacting with the Africa Bird Map's data. Some examples on how to use the package are given below. First we start by installing the package. 
+
+
+
+### Installing the package
+
+You would need `devtools` to install this package directly from github.
+
+1. Install the `devtools` package if you do not have it. 
+
+```r 
+install.packages("devtools")
+```
+
+2. Load the `devtools` package.
+
+```
+library(devtools)
+```
+
+3. Install the package
+
+```r
+install_github("davidclarance/africabirdmap")
+```
 
 
 ### Example 1 : Calculate the reporting rate for a species
