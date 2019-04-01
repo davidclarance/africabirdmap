@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554145028844.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2584826608",
+    "id" : "4154371A",
+    "lastKnownWriteTime" : 1554145711,
+    "last_content_update" : 1554145711069,
+    "path" : "~/Git/PersonalProjects/africabirdmap/R/extract_data.R",
+    "project_path" : "R/extract_data.R",
+    "properties" : {
+        "cursorPosition" : "53,45",
+        "scrollLine" : "38"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

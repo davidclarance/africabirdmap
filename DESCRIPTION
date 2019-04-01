@@ -1,0 +1,19 @@
+Package: africabirdmap
+Type: Package
+Title: Functions to clean, analyze and plot Africa Bird Map data. 
+Version: 0.1.0
+Author: Les Underhill, Michael Brooks, Marc Burman, Colin Jackson
+Maintainer: David Clarance <dclarance@gmail.com>
+Description: Enables citizen science by providing easy to use tools so researches can focus on questions rather than struggling with the data. 
+License: To be populated
+Encoding: UTF-8
+LazyData: true
+Depends:
+  dplyr,
+  scales,
+  RCurl,
+  digest,
+  RMySQL,
+  RJSONIO,
+  digest
+RoxygenNote: 6.1.1
