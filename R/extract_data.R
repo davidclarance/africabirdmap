@@ -49,9 +49,8 @@ extract_data <- function(username,
                login$registered$status[3],'/',spp,'?format=csv',sep="")
 
   myfile <- getURL(url, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
-  mydata <- read.csv(textConnection(myfile), header=T)
 
-  mydata$StartDate = as.Date(mydata$StartDate)
+  mydata <- read_csv(myfile)
 
   mydata
 

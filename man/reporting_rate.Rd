@@ -5,7 +5,8 @@
 \title{Calculate the reporting rate of a species}
 \usage{
 reporting_rate(df, species_id, start_date = "1970-01-01",
-  end_date = Sys.Date(), pentad_id)
+  end_date = Sys.Date(), selected_area = "Kenya",
+  selection_type = "Country")
 }
 \arguments{
 \item{df}{A dataframe obtained from the species API call. Use `extract_data` if required.}
@@ -14,25 +15,33 @@ reporting_rate(df, species_id, start_date = "1970-01-01",
 
 \item{start_date}{A character or date object denoting the starting point from which reporting rate is to be measured.}
 
-\item{end_date}{A character or date object denoting the end point from which reporting rate is to be measured.}
+\item{selected_area}{Either a pentad (eg: 0105_3930), country (eg: Kenya), county (eg: Kitui) or province (eg: rift valley). Lists of the same can be applied as well. For instance, for multiple pentads you could use, c('0105_3930', '0110c3620').}
 
-\item{pentad_id}{A character vector denoting the pentad id.}
+\item{selection_type}{Can take either of the four values: 'Pentad', 'Country', 'County' or 'Province'.}
 }
 \value{
-A numeric object between 0 and 1 (inclusive) denoting the reporting rate of a species. The reporting rate is equal to the number of times a species has been recorded divided by the number of full protocol cards in the specified time and region.
+A numeric object between 0 and 1 (inclusive) denoting the reporting rate of a species. The reporting rate is equal to the number of times a species has been recorded divided by the number of full protocol cards in the specified time and area.
 }
 \description{
 Obtain a reporting rate of a species over a specified time period and spatial configuration.
 }
 \details{
-This functions assumes that all years are 365 days. Necessary corrections for leap years are made.
+\itemize{
+\item This functions assumes that all years are 365 days. Necessary corrections for leap years are made.
+\item For a full list of all possible values for selection_area, run `View(africabirdmap::pentads_geographical_features)` in the console.
+}
 }
 \examples{
 
 \dontrun{
 
-# the reporting rate of African Black-shouldered Kite in Nairobi National Park
-reporting_rate(df, species_id = 130, start_date = '1970-01-01', end_date = Sys.Date(), pentad_id = '0120-3650')
+# the reporting rate of African Paradise Flycatchers in the coastal region in Kenya.
+reporting_rate(df,
+species_id = 682,
+start_date = '1970-01-01',
+end_date = Sys.Date(),
+selected_area = "Coast" ,
+selection_type = "Province")
 
 }
 

@@ -2,35 +2,80 @@
 #'
 #' Obtain a reporting rate of a species over a specified time period and spatial configuration.
 #'
-#' This functions assumes that all years are 365 days. Necessary corrections for leap years are made.
-#'
+#' @details
+#' \itemize{
+#' \item This functions assumes that all years are 365 days. Necessary corrections for leap years are made.
+#' \item For a full list of all possible values for selection_area, run `View(africabirdmap::pentads_geographical_features)` in the console.
+#'}
 #'
 #' @param df A dataframe obtained from the species API call. Use `extract_data` if required.
 #' @param species_id An integer id. The KBM website has a list of all species with their ids.
 #' @param start_date A character or date object denoting the starting point from which reporting rate is to be measured.
-#' @param end_date A character or date object denoting the end point from which reporting rate is to be measured.
-#' @param pentad_id A character vector denoting the pentad id.
+#' @param selected_area Either a pentad (eg: 0105_3930), country (eg: Kenya), county (eg: Kitui) or province (eg: rift valley). Lists of the same can be applied as well. For instance, for multiple pentads you could use, c('0105_3930', '0110c3620').
+#' @param selection_type Can take either of the four values: 'Pentad', 'Country', 'County' or 'Province'.
 #' @export
-#' @return A numeric object between 0 and 1 (inclusive) denoting the reporting rate of a species. The reporting rate is equal to the number of times a species has been recorded divided by the number of full protocol cards in the specified time and region.
+#' @return A numeric object between 0 and 1 (inclusive) denoting the reporting rate of a species. The reporting rate is equal to the number of times a species has been recorded divided by the number of full protocol cards in the specified time and area.
 #' @examples
 #'
 #' \dontrun{
 #'
-#'# the reporting rate of African Black-shouldered Kite in Nairobi National Park
-#' reporting_rate(df, species_id = 130, start_date = '1970-01-01', end_date = Sys.Date(), pentad_id = '0120-3650')
+#'# the reporting rate of African Paradise Flycatchers in the coastal region in Kenya.
+#' reporting_rate(df,
+#' species_id = 682,
+#' start_date = '1970-01-01',
+#' end_date = Sys.Date(),
+#' selected_area = "Coast" ,
+#' selection_type = "Province")
 #'
 #' }
 #'
 #'
-reporting_rate <- function(df, species_id, start_date = '1970-01-01', end_date = Sys.Date(), pentad_id){
+reporting_rate <- function(df,
+                           species_id,
+                           start_date = '1970-01-01',
+                           end_date = Sys.Date(),
+                           selected_area = "Kenya" ,
+                           selection_type = "Country"){
 
   # convert to correct date format
   start_date = as.Date(start_date)
   end_date = as.Date(end_date)
 
+  # correct case
+  selected_area = tolower(selected_area)
+  selection_type = tolower(selection_type)
+
+
+  # prepare location features dataset for filtering
+  # pentads_geographical_features is the master copy
+  selected_pentads <- pentads_geographical_features %>%
+    mutate(SelectedPentad = Pentad) %>%
+    gather(c("Country", "Province", "County", "Pentad"), key = "Category", value = "Area") %>%
+    mutate(Area = tolower(Area)) %>%
+    mutate(Category = tolower(Category))
+
+  # check if the selected features exist
+
+  if(!(all(selected_area %in% selected_pentads$Area))){stop("selected_area not in list, check `pentads_geographical_features` for all possible areas")}
+
+  if(!(all(selection_type %in% selected_pentads$Category))){stop("selection_type not in list, possible types are: Pentad, Country, County, Province ")}
+
+
+  # filter by user selection
+  selected_pentads <- selected_pentads %>%
+    filter((Area %in% selected_area) & (Category %in% selection_type)) %>%
+    select(SelectedPentad) %>%
+    pull()
+
+
+  if(length(selected_pentads) == 0){stop("This specific combination of area and type do not exist, check `pentads_geographical_features` for all possible comvbinations")}
+
+
+
   # get baseline data
+  # applying the filters defined in the function here
   df <- df %>%
-    filter(Pentad %in% pentad_id) %>%
+    filter(Pentad %in% selected_pentads) %>%
     filter(StartDate >= start_date) %>%
     filter(StartDate <= end_date)
 
