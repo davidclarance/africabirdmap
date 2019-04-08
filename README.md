@@ -39,15 +39,33 @@ install_github("davidclarance/africabirdmap")
 First you need to extract data from AFB. This is done using an API call. However, this is temporary solution and must be changed. 
 ```r
 # download data for the African Paradise Flycatcher
-raw_data <- extract_data(username = "dclarance@gmail.com" ,user_id = 40664, password = "xxxxx", species_id = 682)
+raw_data <- extract_data(username = "dclarance@gmail.com" ,
+  user_id = 40664, password = "xxxxx", species_id = 682)
+
+```s
+
+Then you can run the reporting rate function with the conditions you like. 
+
+```r 
+# get the reporting rate for African Paradise Flycatcher in Kenya
+reporting_rate(df = raw_data, species_id = 682, start_date = '1970-01-01', 
+  end_date = Sys.Date(), selected_area = "Kenya",
+  selection_type = "Country")
 
 ```
 
-Then you can run the reporting rate function with the conditions you like 
+You can get reporting rates for a species at the country, province and county level. 
 
 ```r 
-# get the reporting rate for African Paradise Flycatcher in Nairobi National Park
-reporting_rate(df = raw_data, species_id = 682, start_date = '1970-01-01', end_date = Sys.Date(), pentad_id = '0120-3650')
+# get the reporting rate for African Paradise Flycatcher in Turkana
+reporting_rate(df = raw_data, species_id = 682, start_date = '1970-01-01', 
+  end_date = Sys.Date(), selected_area = "Turkana",
+  selection_type = "County")
+  
+# get the reporting rate for African Paradise Flycatcher in the Rift Valley
+reporting_rate(df = raw_data, species_id = 682, start_date = '1970-01-01', 
+  end_date = Sys.Date(), selected_area = "Rift Valley",
+  selection_type = "Province")
 
 ```
 
@@ -55,17 +73,21 @@ reporting_rate(df = raw_data, species_id = 682, start_date = '1970-01-01', end_d
 
 
 First we need to create the dataset with the smoothened values
+
+
 ```r 
 # get the underhill smoothened data for African Paradise Flycatcher (across Africa)
-analysis_df <- underhill_smoother(raw_data = raw_data, species_id = 682, start_month = 7, pentade_window = 3, first_pentade = 1, last_pentade = 73)
+analysis_df <- underhill_smoother(raw_data = raw_data, species_id = 682, start_month = 7,
+  pentade_window = 3, first_pentade = 1, last_pentade = 73,
+  selection_area = "Kenya", selection_type = "Country")
 
 ```
 
-Once that's done, we'll just need to plug in those values into the plotting function. 
+Once that's done, we'll just need to plug in those values into the plotting function. There are two plotting functions. `underhill_single_curves` generates plot for a single species and `underhill_multiple_curves` generate plots for multiple species. An example is given below. 
 
 ```r 
 # plot the curves
-underhill_curves(underhill_smoother = analysis_df, species_id = 682, species_name = "African Paradise Flycatcher")
+underhill_curves(underhill_smoother = analysis_df)
 ```
 
 
