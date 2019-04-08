@@ -41,35 +41,9 @@ reporting_rate <- function(df,
   start_date = as.Date(start_date)
   end_date = as.Date(end_date)
 
-  # correct case
-  selected_area = tolower(selected_area)
-  selection_type = tolower(selection_type)
-
-
-  # prepare location features dataset for filtering
-  # pentads_geographical_features is the master copy
-  selected_pentads <- pentads_geographical_features %>%
-    mutate(SelectedPentad = Pentad) %>%
-    gather(c("Country", "Province", "County", "Pentad"), key = "Category", value = "Area") %>%
-    mutate(Area = tolower(Area)) %>%
-    mutate(Category = tolower(Category))
-
-  # check if the selected features exist
-
-  if(!(all(selected_area %in% selected_pentads$Area))){stop("selected_area not in list, check `pentads_geographical_features` for all possible areas")}
-
-  if(!(all(selection_type %in% selected_pentads$Category))){stop("selection_type not in list, possible types are: Pentad, Country, County, Province ")}
-
-
-  # filter by user selection
-  selected_pentads <- selected_pentads %>%
-    filter((Area %in% selected_area) & (Category %in% selection_type)) %>%
-    select(SelectedPentad) %>%
-    pull()
-
-
-  if(length(selected_pentads) == 0){stop("This specific combination of area and type do not exist, check `pentads_geographical_features` for all possible comvbinations")}
-
+  # get list of pentads
+  selected_pentads = filter_pentads(selected_area = selected_area,
+                                    selection_type = selection_type)
 
 
   # get baseline data

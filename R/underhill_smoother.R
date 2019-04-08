@@ -2,12 +2,18 @@
 #'
 #' Fit the underhill smoother (put reference here) to reporting rate distribution over pentades.The underhill smoother is a locally weighted binomial general linear model using a logit link, where the weights are generated using a exponential distribution.
 #'
-#' Pentades are blocks of 5 consecutive days. The implementation measures pentades from a defined month `start_month`. This implementation needs review and should not be considered final.
 #'
+#' @details
+#' \itemize{
+#' \item Pentades are blocks of 5 consecutive days. The implementation measures pentades from a defined month `start_month`. This implementation needs review and should not be considered final.
+#' \item For a full list of all possible values for selection_area, run `View(africabirdmap::pentads_geographical_features)` in the console.
+#' }
 #'
 #' @param raw_data Data for a species extracted uing `extract_data()`. The StartDate column should be of type `date`.
 #' @param species_id The species_id for which data is extracted. A complete list of species name and ids are available on the Kenya Bird Map website.
 #' @param start_month The month to start the pentades from. Default is 7.
+#' @param selected_area Either a pentad (eg: 0105_3930), country (eg: Kenya), county (eg: Kitui) or province (eg: rift valley). Lists of the same can be applied as well. For instance, for multiple pentads you could use, c('0105_3930', '0110c3620').
+#' @param selection_type Can take either of the four values: 'Pentad', 'Country', 'County' or 'Province'.
 #' @param pentade_window The number of pentades on either side of the target day to give the weights to.
 #' @param first_pentade The starting value of the pentades. Default is 1.
 #' @param last_pentade The last value of the pentades. Default is 73.
@@ -26,13 +32,20 @@
 underhill_smoother <- function(raw_data,
                                species_id,
                                start_month = 7,
+                               selected_area = "Kenya" ,
+                               selection_type = "Country",
                                pentade_window,
                                first_pentade = 1,
                                last_pentade = 73){
+  # get list of pentads
+  selected_pentads = filter_pentads(selected_area = selected_area,
+                                    selection_type = selection_type)
 
+  species_name = unique(na.omit(raw_data$Common_name))
 
   # get select columns and create pentades
   clean_data <- raw_data %>%
+    filter(Pentad %in% selected_pentads) %>%
     select(CardNo,
            StartDate,
            Pentad,
@@ -105,7 +118,9 @@ underhill_smoother <- function(raw_data,
     # a work around to get neat x-axis values
     mutate(nDays = pentades * 5) %>%
     mutate(DateInYear = as.Date(paste0('2019-0',start_month, '-01')) + nDays) %>%
-    mutate(Month = months(DateInYear))
+    mutate(Month = months(DateInYear)) %>%
+    mutate(SpeciesId = species_id) %>%
+    mutate(SpeciesName = species_name)
 
   output_df
 

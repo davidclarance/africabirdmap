@@ -4,22 +4,25 @@
 #'
 #' The dark, thinner interval is the 1 sigma interval and corresponds to 67% confidence, whereas the 2 sigma interval corresponds to a 95% confidence.
 #'
+#' This function only takes in one dataframe and is intended for deep study of one species. To make multi species comparisons use `underhill_multiple_curves`
+#'
 #' @param underhill_smoother The dataframe returned by the `underhill_smoother function`.
-#' @param species_id The species_id for which data is extracted. A complete list of species name and ids are available on the Kenya Bird Map website.
-#' @param species_name The name of the species you are plotting. This is to use in the title of the plots.
-#' @export
+
 #' @return A ggplot plot
 #' @examples
 #'
 #' \dontrun{
 #'
 #'
-#' underhill_curves(underhill_smoother, species_id = 103, species_name = "African Black-shouldered Kite")
+#' underhill_curves(underhill_smoother)
 #'
 #' }
 #'
 #'
-underhill_curves <- function(underhill_smoother, species_id, species_name){
+underhill_single_curves <- function(underhill_smoother){
+
+  species_id = underhill_smoother$SpeciesId[1]
+  species_name = underhill_smoother$SpeciesName[1]
 
   output_plot <- underhill_smoother %>%
     ggplot(aes(y = fit)) +
@@ -30,7 +33,7 @@ underhill_curves <- function(underhill_smoother, species_id, species_name){
     geom_smooth(aes(x = DateInYear, ymin = fit - 1*se, ymax = fit + 1*se), stat = 'identity') +
     # fix scales
     scale_x_date(labels = date_format("%b"), date_breaks = 'month') +
-    scale_y_continuous(labels = percent_format()) +
+    scale_y_continuous(labels = percent_format(), limits = c(0, 1)) +
     # add labels
     xlab('Month') +
     ylab('Reporting rate') +

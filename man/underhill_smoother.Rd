@@ -4,7 +4,8 @@
 \alias{underhill_smoother}
 \title{Fit the underhill smoother to a reporting rate distribution}
 \usage{
-underhill_smoother(raw_data, species_id, start_month = 7, pentade_window,
+underhill_smoother(raw_data, species_id, start_month = 7,
+  selected_area = "Kenya", selection_type = "Country", pentade_window,
   first_pentade = 1, last_pentade = 73)
 }
 \arguments{
@@ -13,6 +14,10 @@ underhill_smoother(raw_data, species_id, start_month = 7, pentade_window,
 \item{species_id}{The species_id for which data is extracted. A complete list of species name and ids are available on the Kenya Bird Map website.}
 
 \item{start_month}{The month to start the pentades from. Default is 7.}
+
+\item{selected_area}{Either a pentad (eg: 0105_3930), country (eg: Kenya), county (eg: Kitui) or province (eg: rift valley). Lists of the same can be applied as well. For instance, for multiple pentads you could use, c('0105_3930', '0110c3620').}
+
+\item{selection_type}{Can take either of the four values: 'Pentad', 'Country', 'County' or 'Province'.}
 
 \item{pentade_window}{The number of pentades on either side of the target day to give the weights to.}
 
@@ -27,7 +32,10 @@ A dataframe where each row is a pentade with the `fit` values, the standard erro
 Fit the underhill smoother (put reference here) to reporting rate distribution over pentades.The underhill smoother is a locally weighted binomial general linear model using a logit link, where the weights are generated using a exponential distribution.
 }
 \details{
-Pentades are blocks of 5 consecutive days. The implementation measures pentades from a defined month `start_month`. This implementation needs review and should not be considered final.
+\itemize{
+\item Pentades are blocks of 5 consecutive days. The implementation measures pentades from a defined month `start_month`. This implementation needs review and should not be considered final.
+\item For a full list of all possible values for selection_area, run `View(africabirdmap::pentads_geographical_features)` in the console.
+}
 }
 \examples{
 
