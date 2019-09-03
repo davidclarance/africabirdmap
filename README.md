@@ -1,3 +1,14 @@
+This repository is no longer maintained since the underlying API changed. Please use `rabm` instead. 
+
+The repo can be found here: https://github.com/davidclarance/rabm
+
+
+---
+
+
+
+
+
 ## The Kenya Bird Map
 
 *This will eventually change to the Africa Bird Map.*
